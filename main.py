@@ -1,16 +1,16 @@
 import logging
-import os
 
 import praw
+from config import settings
 from telegram import Update, Message, MessageEntity
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext
 
 log = logging.getLogger(__name__)
 
 reddit = praw.Reddit(
-    client_id=os.getenv("reddit_client_id"),
-    client_secret=os.getenv("reddit_client_secret"),
-    user_agent="telegram:fedalto.reddit_preview_bot:v0.0.1 (by /u/fedalto)",
+    client_id=settings.reddit_client_id,
+    client_secret=settings.reddit_client_secret,
+    user_agent=f"telegram:fedalto.reddit_preview_bot:{settings.version} (by /u/fedalto)",
 )
 
 
@@ -36,9 +36,7 @@ def handle_reddit_post(update: Update, context: CallbackContext):
 
 
 def main():
-    updater = Updater(
-        token=os.getenv("telegram_token"), use_context=True,
-    )
+    updater = Updater(token=settings.telegram_token, use_context=True,)
     dispatcher = updater.dispatcher
     reddit_handler = MessageHandler(filters=Filters.text, callback=handle_reddit_post)
     dispatcher.add_handler(reddit_handler)
