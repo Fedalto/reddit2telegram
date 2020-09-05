@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from distutils.version import Version, StrictVersion
 
-from version import version
+from reddit2telegram.version import version
 
 
 @dataclass
