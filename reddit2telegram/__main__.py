@@ -9,7 +9,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 bot = create_bot(settings.telegram_token)
 
-reddit_client = create_reddit_instance(settings.reddit_client_id, settings.reddit_client_secret, settings.version)
+reddit_client = create_reddit_instance(
+    settings.reddit_client_id, settings.reddit_client_secret, settings.version
+)
 bot.dispatcher.bot_data["reddit_client"] = reddit_client
 
 log.info("Starting bot")

@@ -2,7 +2,7 @@ import unittest
 
 from telegram import Bot, Message
 
-from reddit2telegram.bot import parse_reddit_urls
+from reddit2telegram.bot import parse_urls
 
 
 class ParseRedditURL(unittest.TestCase):
@@ -38,11 +38,11 @@ class ParseRedditURL(unittest.TestCase):
         }
         bot = Bot(token="1234:test")
         message = Message.de_json(message_data, bot)
-        urls = parse_reddit_urls(message)
+        urls = parse_urls(message)
 
         self.assertIn(
             "https://www.reddit.com/r/nextfuckinglevel/comments/i99a63/3d_printed_spiderman_homecoming_mask/",
-            urls
+            urls,
         )
 
 
