@@ -29,7 +29,7 @@ def is_video_post(reddit_post: Submission) -> bool:
 
 
 def get_original(reddit_client: praw.Reddit, reddit_post: Submission) -> Submission:
-    if reddit_post.crosspost_parent:
+    if hasattr(reddit_post, "crosspost_parent") and reddit_post.crosspost_parent:
         parent_id = reddit_post.crosspost_parent_list[0]["id"]
         return reddit_client.submission(id=parent_id)
     return reddit_post

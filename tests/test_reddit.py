@@ -18,9 +18,7 @@ class RedditTestCase(unittest.TestCase):
 
         self.assertIsInstance(preview, ImagePreview)
         self.assertEqual(preview.title, "Printers")
-        self.assertEqual(
-            "https://i.redd.it/jlx9wokn7tl31.jpg", preview.image_url
-        )
+        self.assertEqual("https://i.redd.it/jlx9wokn7tl31.jpg", preview.image_url)
 
     def test_gif(self):
         url = "https://www.reddit.com/r/nextfuckinglevel/comments/i99a63/3d_printed_spiderman_homecoming_mask"
@@ -38,7 +36,9 @@ class RedditTestCase(unittest.TestCase):
 
         self.assertIsInstance(preview, VideoPreview)
         self.assertEqual(preview.title, "This handmade tortilla press")
-        self.assertIn("https://v.redd.it/88rn1x4c0dl51/DASH_1080.mp4", preview.video_url)
+        self.assertIn(
+            "https://v.redd.it/88rn1x4c0dl51/DASH_1080.mp4", preview.video_url
+        )
 
 
 if __name__ == "__main__":
