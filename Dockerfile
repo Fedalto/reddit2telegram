@@ -6,4 +6,4 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 
-CMD ["python", "reddit2telegram"]
+CMD ["python", "-m", "reddit2telegram"]
