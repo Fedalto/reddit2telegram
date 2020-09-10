@@ -21,13 +21,13 @@ def create_bot(token: str) -> Updater:
 
 def handle_reddit_post(update: Update, context: CallbackContext):
     message: Message = update.effective_message
-    log.debug(f"Handling {message=}")
 
     reddit_client = context.bot_data["reddit_client"]
     reddit_urls = parse_urls(message)
 
     for reddit_url in reddit_urls:
         preview = reddit_preview(reddit_client, reddit_url)
+        log.debug(f"Sending {preview=}")
 
         if isinstance(preview, VideoPreview):
             context.bot.send_video(
@@ -46,6 +46,8 @@ def handle_reddit_post(update: Update, context: CallbackContext):
                 caption=preview.title,
                 photo=preview.image_url,
             )
+        else:
+            log.warning(f"URL not supported: url={reddit_url}")
 
 
 def parse_urls(message: Message) -> List[str]:
