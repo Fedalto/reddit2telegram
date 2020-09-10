@@ -1,10 +1,17 @@
 import logging
 from logging.config import dictConfig
 
+import sentry_sdk
+
 from reddit2telegram.bot import create_bot
 from reddit2telegram.config import settings
 from reddit2telegram.log import LOG_CONFIG
 from reddit2telegram.reddit import create_reddit_instance
+
+sentry_sdk.init(
+    traces_sample_rate=1.0,
+    release=str(settings.version),
+)
 
 log = logging.getLogger("reddit2telegram")
 dictConfig(LOG_CONFIG)
