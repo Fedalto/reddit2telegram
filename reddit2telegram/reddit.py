@@ -35,7 +35,7 @@ def get_original(reddit_client: praw.Reddit, reddit_post: Submission) -> Submiss
     return reddit_post
 
 
-def reddit_preview(
+def create_preview_from_reddit(
     reddit_client: praw.Reddit, reddit_post_url: str
 ) -> Union[ImagePreview, VideoPreview]:
     reddit_post = reddit_client.submission(url=reddit_post_url)

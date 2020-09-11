@@ -2,7 +2,7 @@ import unittest
 
 from reddit2telegram.config import settings
 from reddit2telegram.preview import ImagePreview, VideoPreview
-from reddit2telegram.reddit import create_reddit_instance, reddit_preview
+from reddit2telegram.reddit import create_reddit_instance, create_preview_from_reddit
 
 
 class RedditTestCase(unittest.TestCase):
@@ -14,7 +14,7 @@ class RedditTestCase(unittest.TestCase):
 
     def test_image(self):
         url = "https://www.reddit.com/r/funny/comments/d2bwot/printers/"
-        preview = reddit_preview(self.reddit_client, url)
+        preview = create_preview_from_reddit(self.reddit_client, url)
 
         self.assertIsInstance(preview, ImagePreview)
         self.assertEqual(preview.title, "Printers")
@@ -22,7 +22,7 @@ class RedditTestCase(unittest.TestCase):
 
     def test_gif(self):
         url = "https://www.reddit.com/r/nextfuckinglevel/comments/i99a63/3d_printed_spiderman_homecoming_mask"
-        preview = reddit_preview(self.reddit_client, url)
+        preview = create_preview_from_reddit(self.reddit_client, url)
 
         self.assertIsInstance(preview, VideoPreview)
         self.assertEqual(
@@ -32,7 +32,7 @@ class RedditTestCase(unittest.TestCase):
 
     def test_crosspost(self):
         url = "https://www.reddit.com/r/oddlysatisfying/comments/inarcs/this_handmade_tortilla_press/"
-        preview = reddit_preview(self.reddit_client, url)
+        preview = create_preview_from_reddit(self.reddit_client, url)
 
         self.assertIsInstance(preview, VideoPreview)
         self.assertEqual(preview.title, "This handmade tortilla press")

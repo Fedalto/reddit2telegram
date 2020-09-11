@@ -1,11 +1,12 @@
 import logging
 from typing import List
+from urllib.parse import urlparse
 
 from telegram import Update, Message, MessageEntity
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext
 
 from reddit2telegram.preview import VideoPreview, ImagePreview
-from reddit2telegram.reddit import reddit_preview
+from reddit2telegram.reddit import create_preview_from_reddit
 
 log = logging.getLogger(__name__)
 
@@ -19,14 +20,20 @@ def create_bot(token: str) -> Updater:
     return updater
 
 
+def is_from_reddit(url: str) -> bool:
+    domain = urlparse(url).netloc
+    return domain in ["www.reddit.com", "redd.it"]
+
+
 def handle_reddit_post(update: Update, context: CallbackContext):
     message: Message = update.effective_message
 
     reddit_client = context.bot_data["reddit_client"]
-    reddit_urls = parse_urls(message)
+    urls = message.parse_entities(MessageEntity.URL).values()
+    reddit_urls = filter(is_from_reddit, urls)
 
     for reddit_url in reddit_urls:
-        preview = reddit_preview(reddit_client, reddit_url)
+        preview = create_preview_from_reddit(reddit_client, reddit_url)
         log.debug(f"Sending {preview=}")
 
         if isinstance(preview, VideoPreview):
@@ -48,8 +55,3 @@ def handle_reddit_post(update: Update, context: CallbackContext):
             )
         else:
             log.warning(f"URL not supported: url={reddit_url}")
-
-
-def parse_urls(message: Message) -> List[str]:
-    urls_entities: dict = message.parse_entities(MessageEntity.URL)
-    return list(urls_entities.values())
