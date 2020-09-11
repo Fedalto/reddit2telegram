@@ -2,7 +2,10 @@ import unittest
 
 from reddit2telegram.config import settings
 from reddit2telegram.preview import ImagePreview, VideoPreview
-from reddit2telegram.reddit import create_reddit_instance, create_preview_from_reddit
+from reddit2telegram.handlers.reddit import (
+    create_reddit_instance,
+    create_preview_from_reddit,
+)
 
 
 class RedditTestCase(unittest.TestCase):

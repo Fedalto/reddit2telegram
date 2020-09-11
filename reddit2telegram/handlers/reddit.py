@@ -1,5 +1,6 @@
 import logging
 from typing import Union
+from urllib.parse import urlparse
 
 import praw
 from praw.reddit import Submission
@@ -53,3 +54,8 @@ def create_preview_from_reddit(
             height=video["height"],
             width=video["width"],
         )
+
+
+def is_from_reddit(url: str) -> bool:
+    domain = urlparse(url).netloc
+    return domain in ["www.reddit.com", "redd.it"]

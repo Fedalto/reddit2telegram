@@ -6,9 +6,7 @@ LOG_CONFIG = {
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
-    "handlers": {
-        "console": {"class": "logging.StreamHandler", "formatter": "default"}
-    },
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "default"}},
     "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
         "reddit2telegram": {
