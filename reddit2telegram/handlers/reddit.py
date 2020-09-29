@@ -55,6 +55,8 @@ def create_preview_from_reddit(
             width=video["width"],
         )
 
+    log.warning(f"Cannot handle {reddit_post_url}")
+
 
 def is_from_reddit(url: str) -> bool:
     domain = urlparse(url).netloc
