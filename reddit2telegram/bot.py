@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 
 def create_bot(token: str) -> Updater:
-    updater = Updater(token=token, use_context=True)
+    updater = Updater(token=token)
     dispatcher: Dispatcher = updater.dispatcher
     dispatcher.add_handler(
         MessageHandler(filters=Filters.entity(MessageEntity.URL), callback=url_handler)
@@ -32,7 +32,7 @@ def error_handler(update: Update, context: CallbackContext):
 def url_handler(update: Update, context: CallbackContext):
     message: Message = update.effective_message
 
-    urls = message.parse_entities(MessageEntity.URL).values()
+    urls = message.parse_entities([MessageEntity.URL]).values()
 
     for url in urls:
         if is_from_reddit(url):
