@@ -12,7 +12,9 @@ class RedditTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.reddit_client = create_reddit_instance(
-            settings.reddit_client_id, settings.reddit_client_secret, settings.version,
+            settings.reddit_client_id,
+            settings.reddit_client_secret,
+            str(settings.version),
         )
 
     def test_image(self):

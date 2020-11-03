@@ -18,7 +18,7 @@ dictConfig(LOG_CONFIG)
 bot = create_bot(settings.telegram_token)
 
 reddit_client = create_reddit_instance(
-    settings.reddit_client_id, settings.reddit_client_secret, settings.version
+    settings.reddit_client_id, settings.reddit_client_secret, str(settings.version)
 )
 bot.dispatcher.bot_data["reddit_client"] = reddit_client
 

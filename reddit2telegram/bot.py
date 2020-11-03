@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 import sentry_sdk
 from telegram import Update, Message, MessageEntity
@@ -21,12 +22,17 @@ def create_bot(token: str) -> Updater:
     return updater
 
 
-def error_handler(update: Update, context: CallbackContext):
-    with sentry_sdk.push_scope() as sentry_scope:
-        sentry_scope.set_user({"id": update.effective_chat.id})
-        sentry_scope.set_level("error")
-        sentry_scope.set_context("update", update.to_dict())
-        sentry_sdk.capture_exception(context.error)
+def error_handler(update: Optional[Update], context: CallbackContext):
+    if update:
+        with sentry_sdk.push_scope() as sentry_scope:
+            sentry_scope.set_level("error")
+            sentry_scope.set_user({"id": update.effective_chat.id})
+            sentry_scope.set_context("update", update.to_dict())
+            sentry_sdk.capture_exception(context.error)
+    else:
+        with sentry_sdk.push_scope() as sentry_scope:
+            sentry_scope.set_level("error")
+            sentry_sdk.capture_exception(context.error)
 
 
 def url_handler(update: Update, context: CallbackContext):
@@ -38,11 +44,10 @@ def url_handler(update: Update, context: CallbackContext):
         if is_from_reddit(url):
             reddit_client = context.bot_data["reddit_client"]
             preview = create_preview_from_reddit(reddit_client, url)
-            if not preview:
-                log.warning(f"URL not supported: url={url}")
-                continue
-
-            send_preview(preview, message, context)
+            if preview:
+                send_preview(preview, message, context)
+            else:
+                log.warning(f"URL not supported: {url=}")
 
 
 def send_preview(preview, message: Message, context: CallbackContext):

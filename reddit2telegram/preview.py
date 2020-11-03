@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass
 from io import BytesIO
+from typing import Optional
 
 import requests
 from telegram import Message
@@ -47,9 +48,9 @@ class ImagePreview:
 class VideoPreview:
     title: str
     video_url: str
-    duration: int = None
-    height: int = None
-    width: int = None
+    duration: Optional[int] = None
+    height: Optional[int] = None
+    width: Optional[int] = None
 
     def send(self, message: Message, context: CallbackContext):
         send_by_url_max_size = 20 * 1024 ** 2  # 20Mb

@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Union, Optional
 from urllib.parse import urlparse
 
 import praw
@@ -38,7 +38,7 @@ def get_original(reddit_client: praw.Reddit, reddit_post: Submission) -> Submiss
 
 def create_preview_from_reddit(
     reddit_client: praw.Reddit, reddit_post_url: str
-) -> Union[ImagePreview, VideoPreview]:
+) -> Optional[Union[ImagePreview, VideoPreview]]:
     reddit_post = reddit_client.submission(url=reddit_post_url)
     original_post = get_original(reddit_client, reddit_post)
 
@@ -56,6 +56,7 @@ def create_preview_from_reddit(
         )
 
     log.warning(f"Cannot handle {reddit_post_url}")
+    return None
 
 
 def is_from_reddit(url: str) -> bool:
