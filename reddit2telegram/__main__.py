@@ -2,6 +2,7 @@ import logging
 from logging.config import dictConfig
 
 import sentry_sdk
+from youtube_dl import YoutubeDL
 
 from reddit2telegram.bot import create_bot
 from reddit2telegram.config import settings

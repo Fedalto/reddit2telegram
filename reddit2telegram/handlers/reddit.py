@@ -1,9 +1,13 @@
 import logging
+from io import BytesIO
+from os import unlink
+from tempfile import gettempdir
 from typing import Union, Optional
 from urllib.parse import urlparse
 
 import praw
 from praw.reddit import Submission
+from youtube_dl import YoutubeDL
 
 from reddit2telegram.preview import ImagePreview, VideoPreview
 
@@ -46,13 +50,14 @@ def create_preview_from_reddit(
         return ImagePreview(title=reddit_post.title, image_url=original_post.url)
 
     if is_video_post(original_post):
-        video = original_post.secure_media["reddit_video"]
+        video_info = original_post.secure_media["reddit_video"]
+        video = download_video(original_post)
         return VideoPreview(
             title=reddit_post.title,
-            video_url=video["fallback_url"],
-            duration=video["duration"],
-            height=video["height"],
-            width=video["width"],
+            video=video,
+            duration=video_info["duration"],
+            height=video_info["height"],
+            width=video_info["width"],
         )
 
     log.warning(f"Cannot handle {reddit_post_url}")
@@ -62,3 +67,25 @@ def create_preview_from_reddit(
 def is_from_reddit(url: str) -> bool:
     domain = urlparse(url).netloc
     return domain in ["www.reddit.com", "redd.it"]
+
+
+def download_video(reddit_post: Submission) -> BytesIO:
+    url = reddit_post.url
+    tmp_dir = gettempdir()
+    filename = f"{tmp_dir}/telegram-preview-bot/reddit/{reddit_post.id}.mp4"
+    ydl_opts = {
+        "outtmpl": filename,
+        "quiet": True,
+    }
+
+    try:
+        with YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+
+        video_bytes = BytesIO()
+        with open(filename, "rb") as f:
+            video_bytes.write(f.read())
+        video_bytes.seek(0)
+        return video_bytes
+    finally:
+        unlink(filename)

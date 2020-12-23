@@ -47,40 +47,24 @@ class ImagePreview:
 @dataclass
 class VideoPreview:
     title: str
-    video_url: str
+    video: BytesIO
     duration: Optional[int] = None
     height: Optional[int] = None
     width: Optional[int] = None
 
     def send(self, message: Message, context: CallbackContext):
-        send_by_url_max_size = 20 * 1024 ** 2  # 20Mb
-        send_by_file_max_size = 50 * 1024 ** 2  # 50Mb
-
-        media_size = get_preview_size(self.video_url)
-
-        if media_size < send_by_url_max_size:
-            video = self.video_url
-
-        elif media_size < send_by_file_max_size:
-            video = download_file(self.video_url)
-        else:
-            log.info(
-                f"Can't send preview because it exceeds Telegram size limit. {media_size=}, {self=}"
-            )
-            return
-
         try:
             context.bot.send_video(
                 chat_id=message.chat_id,
                 reply_to_message_id=message.message_id,
                 caption=self.title,
-                video=video,
+                video=self.video,
                 duration=self.duration,
                 height=self.height,
                 width=self.width,
             )
         except TelegramError as e:
-            log.error(f"Error sending video error={e}. preview={self}, {media_size=}")
+            log.error(f"Error sending video error={e}. preview={self}")
             raise
 
 

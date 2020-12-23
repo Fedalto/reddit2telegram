@@ -33,7 +33,6 @@ class RedditTestCase(unittest.TestCase):
         self.assertEqual(
             preview.title, "3D Printed Spiderman Homecoming Mask",
         )
-        self.assertIn("https://v.redd.it/gtg6x2gzdug51/DASH_480.mp4", preview.video_url)
 
     def test_crosspost(self):
         url = "https://www.reddit.com/r/oddlysatisfying/comments/inarcs/this_handmade_tortilla_press/"
@@ -41,9 +40,6 @@ class RedditTestCase(unittest.TestCase):
 
         self.assertIsInstance(preview, VideoPreview)
         self.assertEqual(preview.title, "This handmade tortilla press")
-        self.assertIn(
-            "https://v.redd.it/88rn1x4c0dl51/DASH_1080.mp4", preview.video_url
-        )
 
 
 if __name__ == "__main__":
