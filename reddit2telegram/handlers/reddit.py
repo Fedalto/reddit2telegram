@@ -58,6 +58,7 @@ def create_preview_from_reddit(
             duration=video_info["duration"],
             height=video_info["height"],
             width=video_info["width"],
+            supports_streaming=True,
         )
 
     log.warning(f"Cannot handle {reddit_post_url}")

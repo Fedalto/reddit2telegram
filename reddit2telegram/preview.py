@@ -51,6 +51,7 @@ class VideoPreview:
     duration: Optional[int] = None
     height: Optional[int] = None
     width: Optional[int] = None
+    supports_streaming: Optional[bool] = None
 
     def send(self, message: Message, context: CallbackContext):
         try:
@@ -62,6 +63,7 @@ class VideoPreview:
                 duration=self.duration,
                 height=self.height,
                 width=self.width,
+                supports_streaming=self.supports_streaming,
             )
         except TelegramError as e:
             log.error(f"Error sending video error={e}. preview={self}")
