@@ -67,7 +67,7 @@ def create_preview_from_reddit(
 
 def is_from_reddit(url: str) -> bool:
     domain = urlparse(url).netloc
-    return domain in ["www.reddit.com", "redd.it"]
+    return domain in ["reddit.com", "www.reddit.com", "redd.it"]
 
 
 def download_video(reddit_post: Submission) -> BytesIO:
