@@ -30,9 +30,7 @@ class RedditTestCase(unittest.TestCase):
         preview = create_preview_from_reddit(self.reddit_client, url)
 
         self.assertIsInstance(preview, VideoPreview)
-        self.assertEqual(
-            preview.title, "3D Printed Spiderman Homecoming Mask",
-        )
+        self.assertEqual(preview.title, "3D Printed Spiderman Homecoming Mask")
 
     def test_crosspost(self):
         url = "https://www.reddit.com/r/oddlysatisfying/comments/inarcs/this_handmade_tortilla_press/"
