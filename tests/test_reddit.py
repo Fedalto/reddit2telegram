@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from reddit2telegram.config import settings
 from reddit2telegram.preview import ImagePreview, VideoPreview
@@ -16,6 +17,7 @@ class RedditTestCase(unittest.TestCase):
             settings.reddit_client_secret,
             str(settings.version),
         )
+        patch('reddit2telegram.handlers.reddit.download_video').start()
 
     def test_image(self):
         url = "https://www.reddit.com/r/funny/comments/d2bwot/printers/"
