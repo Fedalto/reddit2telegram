@@ -1,5 +1,5 @@
 requests==2.25.1
-sentry-sdk==0.19.5
-praw==7.1.4
-python-telegram-bot==13.2
-youtube-dl==2021.2.10
+sentry-sdk==1.0.0
+praw==7.2.0
+python-telegram-bot==13.4.1
+youtube-dl==2021.3.14
