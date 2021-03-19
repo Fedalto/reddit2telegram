@@ -17,7 +17,7 @@ class RedditTestCase(unittest.TestCase):
             settings.reddit_client_secret,
             str(settings.version),
         )
-        patch('reddit2telegram.handlers.reddit.download_video').start()
+        patch("reddit2telegram.handlers.reddit.download_video").start()
 
     def test_image(self):
         url = "https://www.reddit.com/r/funny/comments/d2bwot/printers/"

@@ -6,10 +6,12 @@ from typing import Union, Optional
 from urllib.parse import urlparse
 
 import praw
+import sentry_sdk
 from praw.reddit import Submission
+from telegram import InputMediaPhoto
 from youtube_dl import YoutubeDL
 
-from reddit2telegram.preview import ImagePreview, VideoPreview
+from reddit2telegram.preview import ImagePreview, VideoPreview, MediaGroupPreview
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +22,9 @@ def create_reddit_instance(
     user_agent = f"telegram:fedalto.reddit_preview_bot:{version} (by /u/fedalto)"
 
     return praw.Reddit(
-        client_id=client_id, client_secret=client_secret, user_agent=user_agent,
+        client_id=client_id,
+        client_secret=client_secret,
+        user_agent=user_agent,
     )
 
 
@@ -42,7 +46,7 @@ def get_original(reddit_client: praw.Reddit, reddit_post: Submission) -> Submiss
 
 def create_preview_from_reddit(
     reddit_client: praw.Reddit, reddit_post_url: str
-) -> Optional[Union[ImagePreview, VideoPreview]]:
+) -> Optional[Union[ImagePreview, VideoPreview, MediaGroupPreview]]:
     reddit_post = reddit_client.submission(url=reddit_post_url)
     original_post = get_original(reddit_client, reddit_post)
 
@@ -59,6 +63,25 @@ def create_preview_from_reddit(
             height=video_info["height"],
             width=video_info["width"],
             supports_streaming=True,
+        )
+
+    if original_post.is_gallery:
+        gallery = []
+        for item in original_post.gallery_data["items"]:
+            media_id = item["media_id"]
+            metadata = original_post.media_metadata[media_id]
+            caption = item.get("caption")
+            if metadata["e"] == "Image":
+                media = InputMediaPhoto(media=metadata["s"]["u"], caption=caption)
+                gallery.append(media)
+            else:
+                # Don't know what else this can be
+                sentry_sdk.capture_message(
+                    f"Gallery contains media unhandled type: {metadata['e']}"
+                )
+
+        return MediaGroupPreview(
+            media=gallery,
         )
 
     log.warning(f"Cannot handle {reddit_post_url}")

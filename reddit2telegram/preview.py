@@ -1,10 +1,16 @@
 import logging
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Optional
+from typing import Optional, Union
 
 import requests
-from telegram import Message
+from telegram import (
+    Message,
+    InputMediaPhoto,
+    InputMediaAudio,
+    InputMediaDocument,
+    InputMediaVideo,
+)
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
 
@@ -36,11 +42,12 @@ class ImagePreview:
             context.bot.send_photo(
                 chat_id=message.chat_id,
                 reply_to_message_id=message.message_id,
+                allow_sending_without_reply=True,
                 caption=self.title,
                 photo=photo,
             )
         except TelegramError as e:
-            log.error(f"Error sending photo error={e}. preview={self}, {media_size=}")
+            log.error(f"Error sending photo. error={e}, preview={self}, {media_size=}")
             raise
 
 
@@ -58,6 +65,7 @@ class VideoPreview:
             context.bot.send_video(
                 chat_id=message.chat_id,
                 reply_to_message_id=message.message_id,
+                allow_sending_without_reply=True,
                 caption=self.title,
                 video=self.video,
                 duration=self.duration,
@@ -66,7 +74,26 @@ class VideoPreview:
                 supports_streaming=self.supports_streaming,
             )
         except TelegramError as e:
-            log.error(f"Error sending video error={e}. preview={self}")
+            log.error(f"Error sending video. error={e}, preview={self}")
+            raise
+
+
+@dataclass
+class MediaGroupPreview:
+    media: list[
+        Union[InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo]
+    ]
+
+    def send(self, message: Message, context: CallbackContext):
+        try:
+            context.bot.send_media_group(
+                chat_id=message.chat_id,
+                reply_to_message_id=message.message_id,
+                allow_sending_without_reply=True,
+                media=self.media,
+            )
+        except TelegramError as e:
+            log.error(f"Error sending gallery. error={e}, preview={self}")
             raise
 
 
