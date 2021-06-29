@@ -37,6 +37,10 @@ def is_video_post(reddit_post: Submission) -> bool:
     return reddit_post.secure_media and "reddit_video" in reddit_post.secure_media
 
 
+def is_gallery_post(reddit_post: Submission) -> bool:
+    return hasattr(reddit_post, 'is_gallery') and reddit_post.is_gallery
+
+
 def get_original(reddit_client: praw.Reddit, reddit_post: Submission) -> Submission:
     if hasattr(reddit_post, "crosspost_parent") and reddit_post.crosspost_parent:
         parent_id = reddit_post.crosspost_parent_list[0]["id"]
@@ -65,7 +69,7 @@ def create_preview_from_reddit(
             supports_streaming=True,
         )
 
-    if original_post.is_gallery:
+    if is_gallery_post(original_post):
         gallery = []
         for item in original_post.gallery_data["items"]:
             media_id = item["media_id"]
