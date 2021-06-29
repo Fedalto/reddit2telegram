@@ -10,6 +10,8 @@ from reddit2telegram.handlers.reddit import (
 
 
 class RedditTestCase(unittest.TestCase):
+    reddit_client = None
+
     @classmethod
     def setUpClass(cls) -> None:
         cls.reddit_client = create_reddit_instance(
@@ -28,14 +30,14 @@ class RedditTestCase(unittest.TestCase):
         self.assertEqual("https://i.redd.it/jlx9wokn7tl31.jpg", preview.image_url)
 
     def test_gif(self):
-        url = "https://www.reddit.com/r/nextfuckinglevel/comments/i99a63/3d_printed_spiderman_homecoming_mask"
+        url = "https://www.reddit.com/r/nextfuckinglevel/comments/i99a63/3d_printed_spiderman_homecoming_mask"  # noqa: E501
         preview = create_preview_from_reddit(self.reddit_client, url)
 
         self.assertIsInstance(preview, VideoPreview)
         self.assertEqual(preview.title, "3D Printed Spiderman Homecoming Mask")
 
     def test_crosspost(self):
-        url = "https://www.reddit.com/r/oddlysatisfying/comments/inarcs/this_handmade_tortilla_press/"
+        url = "https://www.reddit.com/r/oddlysatisfying/comments/inarcs/this_handmade_tortilla_press/"  # noqa: E501
         preview = create_preview_from_reddit(self.reddit_client, url)
 
         self.assertIsInstance(preview, VideoPreview)

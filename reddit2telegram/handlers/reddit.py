@@ -16,9 +16,7 @@ from reddit2telegram.preview import ImagePreview, VideoPreview, MediaGroupPrevie
 log = logging.getLogger(__name__)
 
 
-def create_reddit_instance(
-    client_id: str, client_secret: str, version: str
-) -> praw.Reddit:
+def create_reddit_instance(client_id: str, client_secret: str, version: str) -> praw.Reddit:
     user_agent = f"telegram:fedalto.reddit_preview_bot:{version} (by /u/fedalto)"
 
     return praw.Reddit(
@@ -38,7 +36,7 @@ def is_video_post(reddit_post: Submission) -> bool:
 
 
 def is_gallery_post(reddit_post: Submission) -> bool:
-    return hasattr(reddit_post, 'is_gallery') and reddit_post.is_gallery
+    return hasattr(reddit_post, "is_gallery") and reddit_post.is_gallery
 
 
 def get_original(reddit_client: praw.Reddit, reddit_post: Submission) -> Submission:

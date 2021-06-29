@@ -1,9 +1,9 @@
 import logging
-from typing import Optional
 
 import sentry_sdk
 from telegram import Update, Message, MessageEntity
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext, Dispatcher
+from telegram.ext.utils.types import CCT
 
 from reddit2telegram.handlers.reddit import create_preview_from_reddit, is_from_reddit
 
@@ -22,11 +22,9 @@ def create_bot(token: str) -> Updater:
     return updater
 
 
-def error_handler(update: Optional[Update], context: CallbackContext):
+def error_handler(update, context: CCT):
     if update:
-        log.exception(
-            f"Error handling update = {update.to_dict()}", exc_info=context.error
-        )
+        log.exception(f"Error handling update = {update.to_dict()}", exc_info=context.error)
 
         with sentry_sdk.push_scope() as sentry_scope:
             sentry_scope.set_level("error")
@@ -42,6 +40,9 @@ def error_handler(update: Optional[Update], context: CallbackContext):
 
 
 def url_handler(update: Update, context: CallbackContext):
+    if update.effective_message is None:
+        return
+
     message: Message = update.effective_message
 
     urls = message.parse_entities([MessageEntity.URL]).values()

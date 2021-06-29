@@ -1,7 +1,7 @@
 import logging
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Optional, Union
+from typing import Optional, Union, Sequence
 
 import requests
 from telegram import (
@@ -10,9 +10,11 @@ from telegram import (
     InputMediaAudio,
     InputMediaDocument,
     InputMediaVideo,
+    PhotoSize,
 )
 from telegram.error import TelegramError
 from telegram.ext import CallbackContext
+from telegram.utils.types import FileInput
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +31,7 @@ class ImagePreview:
         media_size = get_preview_size(self.image_url)
 
         if media_size < send_by_url_max_size:
-            photo = self.image_url
+            photo: Union[FileInput, PhotoSize] = self.image_url
         elif media_size < send_by_file_max_size:
             photo = download_file(self.image_url)
         else:
@@ -80,9 +82,7 @@ class VideoPreview:
 
 @dataclass
 class MediaGroupPreview:
-    media: list[
-        Union[InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo]
-    ]
+    media: Sequence[Union[InputMediaAudio, InputMediaDocument, InputMediaPhoto, InputMediaVideo]]
 
     def send(self, message: Message, context: CallbackContext):
         try:
