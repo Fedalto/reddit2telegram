@@ -1,4 +1,3 @@
-import logging
 from logging.config import dictConfig
 
 LOG_CONFIG = {

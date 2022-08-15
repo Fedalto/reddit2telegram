@@ -25,8 +25,8 @@ class ImagePreview:
     image_url: str
 
     def send(self, message: Message, context: CallbackContext):
-        send_by_url_max_size = 5 * 1024 ** 2  # 5Mb
-        send_by_file_max_size = 10 * 1024 ** 2  # 10Mb
+        send_by_url_max_size = 5 * 1024**2  # 5Mb
+        send_by_file_max_size = 10 * 1024**2  # 10Mb
 
         media_size = get_preview_size(self.image_url)
 
