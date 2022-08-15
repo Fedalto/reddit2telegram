@@ -1,3 +1,6 @@
+import logging
+from logging.config import dictConfig
+
 LOG_CONFIG = {
     "version": 1,
     "formatters": {
@@ -16,3 +19,7 @@ LOG_CONFIG = {
         }
     },
 }
+
+
+def configure_logging():
+    dictConfig(LOG_CONFIG)
